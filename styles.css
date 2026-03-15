@@ -344,6 +344,7 @@ nav.stuck {
   backdrop-filter: saturate(1.05) blur(4px);
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.18);
   transition: box-shadow 180ms ease, backdrop-filter 180ms ease;
+  opacity: 95%;
 }
 
 [data-theme="dark"] nav.stuck {
