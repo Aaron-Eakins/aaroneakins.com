@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Flour City Labs — Aaron Eakins</title>
+	<meta property="og:title" content="Flour City Labs — Aaron Eakins">
+	<meta property="og:description" content="A working production app: an email deliverability analyzer that checks SPF, DKIM, and DMARC, plus a client project system with email reply threading.">
+	<meta property="og:image" content="https://aaroneakins.com/img/preview.jpg">
+	<meta property="og:url" content="https://aaroneakins.com/flour-city-labs.html">
+	<meta property="og:type" content="website">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
+		integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+	<script>
+		(() => {
+			const saved = localStorage.getItem('theme');
+			const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+			const theme = saved || (systemDark ? 'dark' : 'light');
+			document.documentElement.setAttribute('data-theme', theme);
+		})();
+	</script>
+
+	<link href="https://fonts.googleapis.com/css2?family=Cabin:wght@400;500&family=Raleway:wght@600;700&display=swap"
+		rel="stylesheet">
+	<link href="styles.css" rel="stylesheet">
+	<script src="js/sticky-nav.js" defer></script>
+	<script src="js/theme.js" defer></script>
+</head>
+
+<body>
+
+	<div class="theme-toggle">
+		<img src="img/sun-regular-full.svg" alt="Light mode" class="icon-sun">
+		<input type="checkbox" id="theme-switch" aria-label="Toggle dark mode">
+		<img src="img/moon-regular-full.svg" alt="Dark mode" class="icon-moon">
+		<span class="slider"></span>
+	</div>
+
+	<header class="bg-gradient hero-header py-5">
+		<div class="container">
+			<div class="row">
+				<div class="col-12">
+					<h1>Flour City Labs</h1>
+					<h5>Production web &amp; email app | Email deliverability analyzer + client project system</h5>
+					<p class="border-top pt-3 intro-text">
+						Flour City Labs is a working production app for web and email consulting. The core is an
+						email deliverability analyzer that diagnoses SPF, DKIM, and DMARC problems, paired with a
+						client project system that threads email replies into a dashboard. It runs across a
+						serverless stack: Cloudflare for inbound email, Supabase for data and edge functions, and
+						a React front end.
+					</p>
+					<p class="intro-text">
+						<a href="https://flourcitylabs.com" target="_blank" rel="noopener">Live site</a>
+						<span class="px-2">|</span>
+						<a href="https://github.com/Aaron-Eakins/flour_city" target="_blank" rel="noopener">Source on GitHub</a>
+					</p>
+				</div>
+			</div>
+		</div>
+	</header>
+
+	<nav class="sticky-nav">
+		<div class="container">
+			<div class="row align-items-center p-1">
+				<div class="col-auto d-flex pb-2 pb-md-0 nav-hide align-items-center">
+					<h3 class="m-0">Flour City Labs<small class="ms-2"> - Aaron Eakins</small></h3>
+				</div>
+				<div class="col-auto ms-auto pb-md-0">
+					<a href="index.html">aaroneakins.com</a>
+					<span class="px-2">|</span>
+					<a href="https://flourcitylabs.com" target="_blank" rel="noopener">flourcitylabs.com</a>
+				</div>
+			</div>
+		</div>
+	</nav>
+
+	<main class="container mt-3">
+		<div class="row">
+			<div class="col-lg-9 mb-3 work-experience">
+
+				<h2 class="border-bottom">Email Header Analyzer</h2>
+				<p>
+					The main piece. Send any email to <strong class="protected-email" data-user="analyze" data-domain="flourcitylabs.com"></strong> and a Cloudflare
+					Email Worker runs a full analysis, including live DNS lookups for SPF, DKIM, DMARC, and MX, then
+					replies within seconds with a plain-language report.
+				</p>
+				<p>Two other ways to run it:</p>
+				<ul>
+					<li>Upload a <code>.eml</code> or <code>.msg</code> file on the site.</li>
+					<li>Paste raw headers into the analyzer.</li>
+				</ul>
+				<p>
+					Both of those run in the browser, so nothing leaves your machine. The browser paths check
+					headers only. The email path adds the live DNS lookups.
+				</p>
+				<p>
+					The report is built for two readers at once. A plain verdict up top answers "is my email set up
+					right." The raw data sits underneath as proof: DNS records, Authentication-Results, and the
+					Received chain with hop timing. A three-tier Pass / Warn / Fail system separates a low-stakes
+					advisory like DMARC <code>p=none</code> from a real failure like a missing SPF record.
+				</p>
+
+				<h2 class="border-bottom">Architecture</h2>
+				<p>
+					One shared package does the actual work. The header parser and deliverability checks live in a
+					single dependency-free module, and three different surfaces import the same code: the in-browser
+					analyzer, the Cloudflare email worker, and a command-line tool. One implementation, one set of
+					behavior, three runtimes.
+				</p>
+				<p>Around that core:</p>
+				<ul>
+					<li><strong>Cloudflare Email Worker</strong> handles inbound mail. It runs on email ingest, does
+						the analysis, and sends the reply through Resend. No server sitting idle.</li>
+					<li><strong>Supabase Edge Functions</strong> (Deno) handle form submissions and the reply
+						threading described below.</li>
+					<li><strong>React front end</strong> on Vercel hosts the marketing site, the analyzer, the forms,
+						and the client dashboard.</li>
+				</ul>
+				<p>
+					The core parsing logic has an automated test suite covering SPF, DKIM, and DMARC pass and fail
+					cases.
+				</p>
+
+				<h2 class="border-bottom">Client Project System</h2>
+				<p>
+					Clients get a dashboard at <code>/profile</code> that shows their project and the full
+					back-and-forth in order. The email threading behind it is the interesting part.
+				</p>
+				<p>
+					When a client reply comes in to a tagged address, Cloudflare routes it to a Supabase function
+					that pulls the project ID from the address, strips the quoted text, saves the message as a note,
+					and forwards it on with the <code>In-Reply-To</code> and <code>References</code> headers that
+					keep it in the same email thread. Row-level security ties every note to a user, so one client
+					never sees another's.
+				</p>
+
+				<h2 class="border-bottom">Why I Built It</h2>
+				<p>
+					Flour City Labs started as a way to build and run a real system end to end instead of reading
+					about one. Standing up the email worker, the live DNS analysis, the database, and the reply
+					threading taught me more about how these pieces fit than any tutorial could.
+				</p>
+
+			</div>
+
+			<!-- Right column -->
+			<div class="col-lg-3 mb-5">
+				<div class="card mb-3">
+					<div class="card-body py-0">
+						<h2 class="card-title">Stack</h2>
+						<div class="my-2">
+							<h5>Front end</h5>
+							<p><small>React, Vite, Tailwind CSS</small></p>
+						</div>
+						<div class="my-2">
+							<h5>Backend &amp; data</h5>
+							<p><small>Supabase (auth, Postgres, Deno edge functions, row-level security)</small></p>
+						</div>
+						<div class="my-2">
+							<h5>Email</h5>
+							<p><small>Resend (transactional send), Cloudflare Email Routing and Workers</small></p>
+						</div>
+						<div class="my-2">
+							<h5>Security</h5>
+							<p><small>Cloudflare Turnstile bot protection, shared-secret function auth</small></p>
+						</div>
+					</div>
+				</div>
+
+				<div class="card mb-3">
+					<div class="card-body py-0">
+						<h2 class="card-title">Links</h2>
+						<div class="my-2">
+							<p><small><a href="https://flourcitylabs.com" target="_blank" rel="noopener">flourcitylabs.com</a></small></p>
+							<p><small><span class="protected-email email-copy" data-user="analyze" data-domain="flourcitylabs.com" title="Click to copy"></span></small></p>
+							<p><small><a href="https://github.com/Aaron-Eakins/flour_city" target="_blank" rel="noopener">GitHub repo</a></small></p>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</main>
+
+	<footer class="bg-dark text-white-50 text-center">
+		<div class="container">
+			<div class="row p-3">
+				<div class="col-md text-md-center pb-2 pb-md-0">
+					&copy; <span id="year"></span> Aaron Eakins
+				</div>
+			</div>
+		</div>
+	</footer>
+
+	<script>
+		document.getElementById("year").textContent = new Date().getFullYear();
+
+		// Build the email address at runtime so the literal text never sits in the page source.
+		document.querySelectorAll(".protected-email").forEach((el) => {
+			const address = el.dataset.user + "@" + el.dataset.domain;
+			el.textContent = address;
+			if (el.classList.contains("email-copy")) {
+				el.style.cursor = "pointer";
+				el.addEventListener("click", () => {
+					navigator.clipboard.writeText(address).then(() => {
+						el.textContent = "Copied";
+						setTimeout(() => { el.textContent = address; }, 1200);
+					});
+				});
+			}
+		});
+	</script>
+
+</body>
+
+</html>
