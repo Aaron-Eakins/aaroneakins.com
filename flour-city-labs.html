@@ -44,11 +44,12 @@
 					<h1>Flour City Labs</h1>
 					<h5>Production web &amp; email app | Email deliverability analyzer + client project system</h5>
 					<p class="border-top pt-3 intro-text">
-						Flour City Labs is a working production app for web and email consulting. The core is an
-						email deliverability analyzer that diagnoses SPF, DKIM, and DMARC problems, paired with a
-						client project system that threads email replies into a dashboard. It runs across a
-						serverless stack: Cloudflare for inbound email, Supabase for data and edge functions, and
-						a React front end.
+						Flour City Labs is two things at once: a real consulting site for web and email work, and the
+						project I built to learn modern full-stack architecture by running one in production. The core
+						is an email deliverability analyzer that diagnoses SPF, DKIM, and DMARC problems, alongside a
+						client project system where project notes and email replies live in one place. It runs across a
+						serverless stack: Cloudflare for inbound email, Supabase for data and edge functions, a
+						React front end on Vercel, and Resend for everything that goes out by email.
 					</p>
 					<p class="intro-text">
 						<a href="https://flourcitylabs.com" target="_blank" rel="noopener">Live site</a>
@@ -82,8 +83,15 @@
 				<h2 class="border-bottom">Email Header Analyzer</h2>
 				<p>
 					The main piece. Send any email to <strong class="protected-email" data-user="analyze" data-domain="flourcitylabs.com"></strong> and a Cloudflare
-					Email Worker runs a full analysis, including live DNS lookups for SPF, DKIM, DMARC, and MX, then
-					replies within seconds with a plain-language report.
+					Email Worker reads the message's own headers, analyzes the hops and authentication results, and
+					provides an easy-to-read summary of the email's path. It then runs live DNS lookups on the
+					sending domain and compares its published SPF, DKIM, DMARC, and MX records against how the
+					message was actually sent. It replies within seconds with a plain-language report.
+				</p>
+				<p>
+					That comparison catches setups that pass today on luck, like a domain whose mail really goes out
+					through a third party its own records don't account for, where delivery works until the day it
+					doesn't.
 				</p>
 				<p>Two other ways to run it:</p>
 				<ul>
@@ -91,8 +99,8 @@
 					<li>Paste raw headers into the analyzer.</li>
 				</ul>
 				<p>
-					Both of those run in the browser, so nothing leaves your machine. The browser paths check
-					headers only. The email path adds the live DNS lookups.
+					Those two parse the headers in your browser. The email path is the fuller check, since it adds
+					the live DNS comparison.
 				</p>
 				<p>
 					The report is built for two readers at once. A plain verdict up top answers "is my email set up
@@ -134,12 +142,18 @@
 					keep it in the same email thread. Row-level security ties every note to a user, so one client
 					never sees another's.
 				</p>
+				<p>
+					Wiring that routing together was a cross-service debugging exercise: reading logs and HTTP
+					status codes across Cloudflare, the Supabase functions, and Resend to trace a request through
+					all three and confirm each handoff.
+				</p>
 
 				<h2 class="border-bottom">Why I Built It</h2>
 				<p>
 					Flour City Labs started as a way to build and run a real system end to end instead of reading
 					about one. Standing up the email worker, the live DNS analysis, the database, and the reply
-					threading taught me more about how these pieces fit than any tutorial could.
+					threading taught me how these pieces fit together, and the test-first suite underneath is what
+					I'm working through now.
 				</p>
 
 			</div>
