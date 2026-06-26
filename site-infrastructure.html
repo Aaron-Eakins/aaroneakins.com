@@ -6,7 +6,8 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Site Infrastructure — Aaron Eakins</title>
 	<meta property="og:title" content="aaroneakins.com — Site Infrastructure">
-	<meta property="og:description" content="How aaroneakins.com is hosted and deployed: a Rocky Linux DigitalOcean droplet running Nginx, Git-based deployment, and Let's Encrypt TLS.">
+	<meta property="og:description"
+		content="How aaroneakins.com is hosted and deployed: a Rocky Linux DigitalOcean droplet running Nginx, Git-based deployment, and Let's Encrypt TLS.">
 	<meta property="og:image" content="https://aaroneakins.com/img/preview.jpg">
 	<meta property="og:url" content="https://aaroneakins.com/site-infrastructure.html">
 	<meta property="og:type" content="website">
@@ -46,8 +47,7 @@
 					<p class="border-top pt-3 intro-text">
 						This site is also a project. Behind the resume and the write-ups is infrastructure I
 						provision and run myself: a Linux server on DigitalOcean, Nginx, a Git-based deploy, and
-						automated TLS. Building and maintaining it is how I learned the stack hands-on, rather than
-						from a managed host that hides it.
+						automated TLS.
 					</p>
 				</div>
 			</div>
@@ -61,7 +61,7 @@
 					<h3 class="m-0">Site Infrastructure<small class="ms-2"> - Aaron Eakins</small></h3>
 				</div>
 				<div class="col-auto ms-auto pb-md-0">
-					<a href="index.html">aaroneakins.com</a>
+					<a href="https://aaroneakins.com">aaroneakins.com</a>
 				</div>
 			</div>
 		</div>
@@ -73,8 +73,8 @@
 
 				<h2 class="border-bottom">Server and Hosting</h2>
 				<p>
-					The site runs on a DigitalOcean droplet, a small Linux virtual server, on Rocky Linux. Nginx
-					serves the static files. The domain points to the droplet through DNS A records.
+					A Rocky Linux droplet on DigitalOcean serves the static files through Nginx, with DNS A records
+					pointing the domain at it.
 				</p>
 				<p>
 					Running a plain server instead of a managed one-click host was the point. It meant setting up
@@ -98,9 +98,10 @@
 
 				<h2 class="border-bottom">The Front End</h2>
 				<p>
-					The site itself is hand-written HTML, CSS, and JavaScript on top of Bootstrap. The light and
-					dark themes use CSS custom properties, with the choice saved in the browser and a fallback to
-					the visitor's system setting. A small script handles the sticky header.
+					The front end is hand-written HTML, CSS, and JavaScript, with Bootstrap handling the layout
+					grid. The light and dark themes use CSS custom properties, with the choice saved in the browser
+					and a fallback to the visitor's system setting. The header is sticky on medium and larger
+					screens, revealing the name on scroll, with the spacing tuned per breakpoint.
 				</p>
 
 				<h2 class="border-bottom">Why I Built It This Way</h2>
@@ -132,7 +133,7 @@
 						</div>
 						<div class="my-2">
 							<h5>Deploy</h5>
-							<p><small>Git, GitHub Pages</small></p>
+							<p><small>Git, GitHub</small></p>
 						</div>
 						<div class="my-2">
 							<h5>Front end</h5>
