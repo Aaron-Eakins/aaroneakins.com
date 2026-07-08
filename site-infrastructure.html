@@ -43,11 +43,11 @@
 			<div class="row">
 				<div class="col-12">
 					<h1>aaroneakins.com</h1>
-					<h5>Self-hosted on Linux, Nginx, and Git</h5>
+					<h5>Self-hosted on Linux and Nginx</h5>
 					<p class="border-top pt-3 intro-text">
-						This site is also a project. Behind the resume and the write-ups is infrastructure I
-						provision and run myself: a Linux server on DigitalOcean, Nginx, a Git-based deploy, and
-						automated TLS.
+						This site is also a project &mdash; a demonstration of the infrastructure and coding
+						fundamentals behind it. It runs on Rocky Linux on a DigitalOcean droplet, serves through
+						Nginx, deploys over Git, and renews its own TLS certificates automatically.
 					</p>
 				</div>
 			</div>
@@ -71,10 +71,19 @@
 		<div class="row">
 			<div class="col-lg-9 mb-3 work-experience">
 
+				<h2 class="border-bottom">In Short</h2>
+				<ul>
+					<li>Self-hosted on a <strong>Rocky Linux</strong> droplet (DigitalOcean), served with
+						<strong>Nginx</strong></li>
+					<li>One <code>git push</code> deploys to the live server and a GitHub copy at once</li>
+					<li>Automated <strong>HTTPS</strong> via Let's Encrypt and Certbot</li>
+					<li>Hand-written <strong>HTML, CSS, and JavaScript</strong> with light and dark themes</li>
+					<li>Built by hand instead of a managed host &mdash; the setup is the point</li>
+				</ul>
+
 				<h2 class="border-bottom">Server and Hosting</h2>
 				<p>
-					A Rocky Linux droplet on DigitalOcean serves the static files through Nginx, with DNS A records
-					pointing the domain at it.
+					A Rocky Linux droplet on DigitalOcean serves the static files through Nginx.
 				</p>
 				<p>
 					Running a plain server instead of a managed one-click host was the point. It meant setting up
@@ -84,22 +93,21 @@
 
 				<h2 class="border-bottom">Deployment</h2>
 				<p>
-					The site is version-controlled in Git, with a single remote set up to push to two targets at
-					once. One <code>git push</code> updates both the DigitalOcean droplet, which serves the live
-					site through Nginx, and a copy on GitHub. Work happens locally in VS Code and reaches the live
-					site through that one command.
+					The site is version-controlled in Git, with a single remote wired to push to two targets at
+					once. One <code>git push</code> updates both the live server on DigitalOcean and a copy on
+					GitHub &mdash; so publishing a change is one command.
 				</p>
 
 				<h2 class="border-bottom">HTTPS</h2>
 				<p>
-					TLS certificates come from Let's Encrypt, issued and renewed with Certbot. Renewal runs on a
-					schedule, so the certificate does not lapse, and traffic is served over HTTPS.
+					TLS certificates come from Let's Encrypt, issued and renewed automatically with Certbot, so the
+					site is always served over HTTPS.
 				</p>
 
 				<h2 class="border-bottom">The Front End</h2>
 				<p>
-					The front end is hand-written HTML, CSS, and JavaScript, with Bootstrap handling the layout
-					grid. The light and dark themes use CSS custom properties, with the choice saved in the browser
+					The front end is hand-written HTML, CSS, and JavaScript, with Bootstrap for the responsive
+					layout. The light and dark themes use CSS custom properties, with the choice saved in the browser
 					and a fallback to the visitor's system setting. The header is sticky on medium and larger
 					screens, revealing the name on scroll, with the spacing tuned per breakpoint.
 				</p>
@@ -107,7 +115,7 @@
 				<h2 class="border-bottom">Why I Built It This Way</h2>
 				<p>
 					A managed host would have been faster. Running the server, the web server, and the
-					certificates myself was the goal, not a shortcut around it. Maintaining it keeps the Linux,
+					certificates myself was the goal. Maintaining it keeps the Linux,
 					Nginx, and DNS work current instead of theoretical, and it is the groundwork for a self-hosted
 					home lab I'm planning next.
 				</p>
