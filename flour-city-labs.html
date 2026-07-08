@@ -43,7 +43,7 @@
 			<div class="row">
 				<div class="col-12">
 					<h1>Flour City Labs</h1>
-					<h5>Production web &amp; email app | Email deliverability analyzer + client project system</h5>
+					<h5>Production full-stack project &mdash; email deliverability analyzer + client project system</h5>
 					<p class="border-top pt-3 intro-text">
 						Flour City Labs is two things at once: a real consulting site for web and email work, and the
 						project I built to learn modern full-stack architecture by running one in production. The core
@@ -84,47 +84,54 @@
 
 				<h2 class="border-bottom">Email Header Analyzer</h2>
 				<p>
-					The main piece. Send any email to <strong class="protected-email email-copy" data-user="analyze"
-						data-domain="flourcitylabs.com" title="Click to copy"></strong> and a Cloudflare
-					Email Worker reads the message's own headers, analyzes the hops and authentication results, and
-					provides an easy-to-read summary of the email's path. It then runs live DNS lookups on the
-					sending domain and compares its published SPF, DKIM, DMARC, and MX records against how the
-					message was actually sent. It replies within seconds with a plain-language report.
+					The main piece. Send an email to <strong class="protected-email email-copy" data-user="analyze"
+						data-domain="flourcitylabs.com" title="Click to copy"></strong> and you'll get a reply within
+					seconds: a plain-language report on how deliverable that message's sending domain really is.
 				</p>
 				<p>
-					That comparison catches setups that pass today on luck, like a domain whose mail really goes out
-					through a third party its own records don't account for, where delivery works until the day it
-					doesn't.
+					Behind that reply, a Cloudflare Email Worker reads the message's headers and works through the
+					hops and authentication results to trace the email's path. It then runs live DNS lookups on the
+					sending domain and compares its published SPF, DKIM, DMARC, and MX records against how the
+					message was actually sent.
+				</p>
+				<p>
+					That comparison catches a common setup: a domain whose mail goes out through a third party
+					&mdash; Gmail, a CRM, an invoicing tool &mdash; that the domain's own DNS records never account
+					for. The checks still come back clean, because the provider doing the sending is configured
+					correctly. The domain isn't. Send through any other path, or change providers, and it breaks.
 				</p>
 				<p>Two other ways to run it:</p>
 				<ul>
 					<li>Upload a <code>.eml</code> or <code>.msg</code> file on the site.</li>
-					<li>Paste raw headers into the analyzer.</li>
+					<li><a href="https://flourcitylabs.com/#email?section=analyzer" target="_blank"
+							rel="noopener">Paste raw headers into the analyzer.</a></li>
 				</ul>
 				<p>
-					Those two parse the headers in your browser. The email path is the fuller check, since it adds
-					the live DNS comparison.
+					Both of those parse the headers right in your browser. The emailed check is the fuller one, since
+					only it adds the live DNS comparison.
 				</p>
 				<p>
 					The report is built for two readers at once. A plain verdict up top answers "is my email set up
-					right." The raw data sits underneath as proof: DNS records, Authentication-Results, and the
-					Received chain with hop timing. A three-tier Pass / Warn / Fail system separates a low-stakes
-					advisory like DMARC <code>p=none</code> from a real failure like a missing SPF record.
+					right." The raw data sits underneath as proof for the technical reader: DNS records,
+					Authentication-Results, and the Received chain with hop timing. A three-tier Pass / Warn / Fail
+					system separates a low-stakes advisory like DMARC <code>p=none</code> from a real failure like a
+					missing SPF record.
 				</p>
 
 				<h2 class="border-bottom">Architecture</h2>
 				<p>
-					One shared package does the actual work. The header parser and deliverability checks live in a
-					single dependency-free module, and three different surfaces import the same code: the in-browser
-					analyzer, the Cloudflare email worker, and a command-line tool. One implementation, one set of
-					behavior, three runtimes.
+					One shared package does the actual work. The header parsing and deliverability checks live in
+					<code>email-core</code>, a single zero-dependency module, and both surfaces import the same code:
+					the in-browser analyzer and the Cloudflare email worker. One implementation, one set of behavior,
+					two runtimes.
 				</p>
 				<p>Around that core:</p>
 				<ul>
 					<li><strong>Cloudflare Email Worker</strong> handles inbound mail. It runs on email ingest, does
 						the analysis, and sends the reply through Resend. No server sitting idle.</li>
-					<li><strong>Supabase Edge Functions</strong> (Deno) handle form submissions and the reply
-						threading described below.</li>
+					<li><strong>Supabase Edge Functions</strong> (written in TypeScript, running on Deno &mdash; a
+						modern JavaScript/TypeScript runtime, similar to Node.js) handle form submissions and the
+						reply threading described below.</li>
 					<li><strong>React front end</strong> on Vercel hosts the marketing site, the analyzer, the forms,
 						and the client dashboard.</li>
 				</ul>
@@ -135,15 +142,17 @@
 
 				<h2 class="border-bottom">Client Project System</h2>
 				<p>
-					Clients get a dashboard at <code>/profile</code> that shows their project and the full
-					back-and-forth in order. The email threading behind it is the interesting part.
+					Clients get a dashboard at <code>/profile</code> that shows their project alongside a copy of
+					every email reply to their form submission. It's currently wired up for 3D printing projects, with
+					the email analyzer's reports coming to profiles next. The email threading behind it is the
+					interesting part.
 				</p>
 				<p>
-					When a client reply comes in to a tagged address, Cloudflare routes it to a Supabase function
-					that pulls the project ID from the address, strips the quoted text, saves the message as a note,
-					and forwards it on with the <code>In-Reply-To</code> and <code>References</code> headers that
-					keep it in the same email thread. Row-level security ties every note to a user, so one client
-					never sees another's.
+					When a reply comes in to a project's tagged address (<code>reply+{id}@</code>), Cloudflare routes
+					it to a Supabase function that pulls the project ID from the address, strips the quoted text,
+					saves the message as a note, and forwards it to the client with the <code>In-Reply-To</code> and
+					<code>References</code> headers that keep everything in the same email thread. Row-level security
+					ties every note to a user, so one client never sees another's.
 				</p>
 				<p>
 					Wiring that routing together was a cross-service debugging exercise: reading logs and HTTP
@@ -153,20 +162,20 @@
 
 				<h2 class="border-bottom">Why I Built It</h2>
 				<p>
-					Flour City Labs started as a way to build and run a real system end to end instead of reading
-					about one. Standing up the email worker, the live DNS analysis, the database, and the reply
-					threading taught me how these pieces fit together, and the test-first suite underneath is what
-					I'm working through now.
+					Flour City Labs was my way of strengthening my skills on a real, fully working project. Standing
+					up the email worker, the live DNS analysis, the database, and the reply threading taught me how
+					these pieces fit together in production, and the test-first suite underneath is what I'm working
+					through now.
 				</p>
 
 				<h2 class="border-bottom">See It Live</h2>
 				<p>
 					All of it runs in production, so the best way to judge it is to use it. The quickest path is
-					the analyzer: email any message to <strong class="protected-email email-copy"
+					the analyzer: email <strong class="protected-email email-copy"
 						data-user="analyze" data-domain="flourcitylabs.com" title="Click to copy"></strong>, or
-					upload a <code>.eml</code> or <code>.msg</code> file and paste raw headers on the analyzer
+					upload a <code>.eml</code>/<code>.msg</code> file or paste raw headers on the analyzer
 					page. For the full picture, make an account, send a checkup request, and watch the threaded
-					reply land in your dashboard.
+					reply land in your inbox.
 				</p>
 				<p>
 					<a href="https://flourcitylabs.com" target="_blank" rel="noopener">flourcitylabs.com</a>
