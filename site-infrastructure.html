@@ -45,9 +45,9 @@
 					<h1>aaroneakins.com</h1>
 					<h5>Self-hosted on Linux and Nginx</h5>
 					<p class="border-top pt-3 intro-text">
-						This site is also a project &mdash; a demonstration of the infrastructure and coding
-						fundamentals behind it. It runs on Rocky Linux on a DigitalOcean droplet, serves through
-						Nginx, deploys over Git, and renews its own TLS certificates automatically.
+						This site is also a project, a demonstration of the infrastructure and the code behind it. It
+						runs on Rocky Linux on a DigitalOcean droplet, serves through Nginx, deploys over Git, and
+						renews its own TLS certificates automatically.
 					</p>
 				</div>
 			</div>
@@ -78,24 +78,19 @@
 					<li>One <code>git push</code> deploys to the live server and a GitHub copy at once</li>
 					<li>Automated <strong>HTTPS</strong> via Let's Encrypt and Certbot</li>
 					<li>Hand-written <strong>HTML, CSS, and JavaScript</strong> with light and dark themes</li>
-					<li>Built by hand instead of a managed host &mdash; the setup is the point</li>
+					<li>Provisioned and configured by hand, not on a managed one-click host</li>
 				</ul>
 
 				<h2 class="border-bottom">Server and Hosting</h2>
 				<p>
 					A Rocky Linux droplet on DigitalOcean serves the static files through Nginx.
 				</p>
-				<p>
-					Running a plain server instead of a managed one-click host was the point. It meant setting up
-					the operating system, the web server config, and the certificates by hand, which is where the
-					learning is.
-				</p>
 
 				<h2 class="border-bottom">Deployment</h2>
 				<p>
 					The site is version-controlled in Git, with a single remote wired to push to two targets at
 					once. One <code>git push</code> updates both the live server on DigitalOcean and a copy on
-					GitHub &mdash; so publishing a change is one command.
+					GitHub, so publishing a change is one command.
 				</p>
 
 				<h2 class="border-bottom">HTTPS</h2>
@@ -114,10 +109,10 @@
 
 				<h2 class="border-bottom">Why I Built It This Way</h2>
 				<p>
-					A managed host would have been faster. Running the server, the web server, and the
-					certificates myself was the goal. Maintaining it keeps the Linux,
-					Nginx, and DNS work current instead of theoretical, and it is the groundwork for a self-hosted
-					home lab I'm planning next.
+					A managed host would have been faster. Setting up the server, the web server, and the
+					certificates myself was the point: it puts the work on display instead of hiding it behind a
+					one-click platform. Maintaining it keeps my Linux, Nginx, and DNS skills sharp and current, and
+					it is the groundwork for a self-hosted home lab I'm planning next.
 				</p>
 
 			</div>

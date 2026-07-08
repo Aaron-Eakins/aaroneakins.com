@@ -43,7 +43,7 @@
 			<div class="row">
 				<div class="col-12">
 					<h1>Flour City Labs</h1>
-					<h5>Production full-stack project &mdash; email deliverability analyzer + client project system</h5>
+					<h5>Production full-stack project | Email deliverability analyzer + client project system</h5>
 					<p class="border-top pt-3 intro-text">
 						Flour City Labs is two things at once: a real consulting site for web and email work, and the
 						project I built to learn modern full-stack architecture by running one in production. The core
@@ -95,10 +95,10 @@
 					message was actually sent.
 				</p>
 				<p>
-					That comparison catches a common setup: a domain whose mail goes out through a third party
-					&mdash; Gmail, a CRM, an invoicing tool &mdash; that the domain's own DNS records never account
-					for. The checks still come back clean, because the provider doing the sending is configured
-					correctly. The domain isn't. Send through any other path, or change providers, and it breaks.
+					That comparison catches a domain that sends through a third party its own DNS records don't fully
+					account for, like a mail service, a CRM, or an invoicing tool. The message can still arrive,
+					because the provider doing the sending is set up correctly even though the domain's own records
+					aren't. Add a new sender or switch providers, and mail that used to get through can start failing.
 				</p>
 				<p>Two other ways to run it:</p>
 				<ul>
@@ -129,9 +129,9 @@
 				<ul>
 					<li><strong>Cloudflare Email Worker</strong> handles inbound mail. It runs on email ingest, does
 						the analysis, and sends the reply through Resend. No server sitting idle.</li>
-					<li><strong>Supabase Edge Functions</strong> (written in TypeScript, running on Deno &mdash; a
-						modern JavaScript/TypeScript runtime, similar to Node.js) handle form submissions and the
-						reply threading described below.</li>
+					<li><strong>Supabase Edge Functions</strong> (written in TypeScript on Deno, a modern
+						JavaScript/TypeScript runtime similar to Node.js) handle form submissions and the reply
+						threading described below.</li>
 					<li><strong>React front end</strong> on Vercel hosts the marketing site, the analyzer, the forms,
 						and the client dashboard.</li>
 				</ul>
