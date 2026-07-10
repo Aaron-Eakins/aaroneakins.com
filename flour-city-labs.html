@@ -46,7 +46,7 @@
 					<h5>Production full-stack project | Email deliverability analyzer + client project system</h5>
 					<p class="border-top pt-3 intro-text">
 						Flour City Labs is two things at once: a real consulting site for web and email work, and the
-						project I built to learn modern full-stack architecture by running one in production. The core
+						project I built to demonstrate modern full-stack architecture by running one in production. The core
 						is an email deliverability analyzer that diagnoses SPF, DKIM, and DMARC problems, alongside a
 						client project system where project notes and email replies live in one place. It runs across a
 						serverless stack: Cloudflare for inbound email, Supabase for data and edge functions, a
@@ -95,10 +95,14 @@
 					message was actually sent.
 				</p>
 				<p>
-					That comparison catches a domain that sends through a third party its own DNS records don't fully
-					account for, like a mail service, a CRM, or an invoicing tool. The message can still arrive,
-					because the provider doing the sending is set up correctly even though the domain's own records
-					aren't. Add a new sender or switch providers, and mail that used to get through can start failing.
+					That comparison catches a common quiet misconfiguration: a domain whose mail goes out through a
+					service its own DNS records don't authorize, like a CRM, an invoicing tool, or a mailbox
+					provider's "send as" feature. Those messages can still arrive, because authentication passes for
+					the sending service's domain and many receivers accept that when the From domain publishes no
+					enforced DMARC policy. It works until something changes: a stricter policy gets added, a receiver
+					tightens its rules, or a new sender comes online. The live lookup is what makes the report
+					complete, showing not just how this one message authenticated but what the domain's published
+					records say should happen.
 				</p>
 				<p>Two other ways to run it:</p>
 				<ul>
@@ -162,20 +166,25 @@
 
 				<h2 class="border-bottom">Why I Built It</h2>
 				<p>
-					Flour City Labs was my way of strengthening my skills on a real, fully working project. Standing
-					up the email worker, the live DNS analysis, the database, and the reply threading taught me how
-					these pieces fit together in production, and the test-first suite underneath is what I'm working
-					through now.
+					Flour City Labs was my way of strengthening my skills on a real, fully working project, and of
+					demonstrating that pieces I'd worked with individually could run together as one production
+					system, end to end. Standing up the email worker, the live DNS analysis, the database, and the
+					reply threading taught me how these pieces fit together in production, and I'm now expanding the
+					test suite that backs it.
+				</p>
+				<p>
+					I built it AI-assisted, using Claude Code and <a href="https://github.com/garrytan/gstack"
+						target="_blank" rel="noopener">gstack</a>, while owning the architecture and integration
+					decisions. The work outside the codebase, the Cloudflare email routing and the Supabase
+					configuration, I set up and verified by hand, and the automated test suite I added near the end is
+					now part of how I review changes.
 				</p>
 
 				<h2 class="border-bottom">See It Live</h2>
 				<p>
-					All of it runs in production, so the best way to judge it is to use it. The quickest path is
-					the analyzer: email <strong class="protected-email email-copy"
-						data-user="analyze" data-domain="flourcitylabs.com" title="Click to copy"></strong>, or
-					upload a <code>.eml</code>/<code>.msg</code> file or paste raw headers on the analyzer
-					page. For the full picture, make an account, send a checkup request, and watch the threaded
-					reply land in your inbox.
+					The best way to judge it is to use it: email <strong class="protected-email email-copy"
+						data-user="analyze" data-domain="flourcitylabs.com" title="Click to copy"></strong> and a full
+					report lands in your inbox within seconds.
 				</p>
 				<p>
 					<a href="https://flourcitylabs.com" target="_blank" rel="noopener">flourcitylabs.com</a>
