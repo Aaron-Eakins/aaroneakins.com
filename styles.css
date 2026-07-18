@@ -211,13 +211,14 @@ h5 {
 
 p, li {
   font-size: 1rem;
-  line-height: 1.4;
+  line-height: 1.55;
   letter-spacing: 0.4px;
   margin-top: 0;
   margin-bottom: 0.65rem;
 }
 
 ul li {
+  line-height: 1.4;
   margin-bottom: 0.35rem;
 }
 
