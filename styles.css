@@ -166,8 +166,8 @@ h1, h2, h3, h4, h5 {
   font-family: 'Raleway', sans-serif;
   color: var(--text-accent);
   letter-spacing: 0.5px;
-  margin-top: 1rem;
-  margin-bottom: 0.6rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0.35rem;
   line-height: 1.3;
 }
 
@@ -185,7 +185,7 @@ h2 {
   text-transform: uppercase;
   border-bottom: 1px solid var(--accent-light);
   padding-bottom: 0.25rem;
-  margin-top: 1.75rem;
+  margin-top: 1.25rem;
 }
 
 h3 {
